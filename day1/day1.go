@@ -2,42 +2,54 @@ package main
 
 import (
 	"adventofcode/utils"
+	"errors"
 	"fmt"
 )
 
 func main() {
-	entries, _ := utils.IntsFromFile("./input.txt")
+	targetSum := 2020
 
-	fmt.Printf("Part 1: = %+v\n", part1(entries))
-	fmt.Printf("Part 2: = %+v\n", part2(entries))
+	entries, err := utils.ReadInts("./input.txt")
+	if err != nil {
+		panic(err)
+	}
+
+	part1, err := findDouble(entries, targetSum)
+	if err != nil {
+		panic(err)
+	}
+
+	part2, err := findTriple(entries, targetSum)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("Part 1: = %+v\n", part1)
+	fmt.Printf("Part 2: = %+v\n", part2)
 }
 
-func part1(entries []int) int {
-	var result int
+// Part 1
+func findDouble(entries []int, target int) (int, error) {
 	for i, entryI := range entries {
 		for _, entryJ := range entries[i+1:] {
-			if entryI+entryJ == 2020 {
-				result = entryI * entryJ
-				goto Return
+			if entryI+entryJ == target {
+				return entryI * entryJ, nil
 			}
 		}
 	}
-Return:
-	return result
+	return -1, errors.New("No solution found")
 }
 
-func part2(entries []int) int {
-	var result int
+// Part 2
+func findTriple(entries []int, target int) (int, error) {
 	for i := 0; i < len(entries); i++ {
 		for j := i + 1; j < len(entries); j++ {
 			for k := j + 1; k < len(entries); k++ {
-				if entries[i]+entries[j]+entries[k] == 2020 {
-					result = entries[i] * entries[j] * entries[k]
-					goto Return
+				if entries[i]+entries[j]+entries[k] == target {
+					return entries[i] * entries[j] * entries[k], nil
 				}
 			}
 		}
 	}
-Return:
-	return result
+	return -1, errors.New("No solution found")
 }
