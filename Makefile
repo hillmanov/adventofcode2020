@@ -58,4 +58,5 @@ init:
 	@echo "$$GO_MOD_TEMPLATE" > day${day}/go.mod
 	@echo "$$GO_FILE_TEMPLATE" > day${day}/day${day}.go
 	@touch day${day}/input.txt
+	@touch day${day}/README.md
 
