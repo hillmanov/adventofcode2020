@@ -6,13 +6,29 @@ import (
 	"strconv"
 )
 
+func ReadLines(filename string) ([]string, error) {
+	f, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	s := []string{}
+
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		s = append(s, scanner.Text())
+	}
+
+	return s, nil
+}
+
 func ReadInts(filename string) ([]int, error) {
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
 
-	ints := []int{}
+	i := []int{}
 
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
@@ -21,8 +37,8 @@ func ReadInts(filename string) ([]int, error) {
 		if err != nil {
 			return nil, err
 		}
-		ints = append(ints, n)
+		i = append(i, n)
 	}
 
-	return ints, nil
+	return i, nil
 }
