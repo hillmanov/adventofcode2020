@@ -1,3 +1,3 @@
-module github.com/hillmanov/adventofcode/utils
+module adventofcode/utils
 
 go 1.15
