@@ -3,12 +3,8 @@ package main
 import (
 	"adventofcode/utils"
 	"fmt"
-	"regexp"
-	"strconv"
 	"strings"
 )
-
-var parser = regexp.MustCompile(`(\d+)-(\d+) (\w): (\w+)`)
 
 type Policy struct {
 	Check1 int
@@ -36,14 +32,13 @@ func main() {
 }
 
 func parseParts(line string) (Policy, Password) {
-	parts := parser.FindStringSubmatch(line)
+	var check1 int
+	var check2 int
+	var letter rune
+	var password string
 
-	check1, _ := strconv.Atoi(parts[1])
-	check2, _ := strconv.Atoi(parts[2])
-	letter := parts[3]
-	password := parts[4]
-
-	return Policy{Check1: check1, Check2: check2, Letter: letter}, Password(password)
+	fmt.Sscanf(line, "%d-%d %c: %s", &check1, &check2, &letter, &password)
+	return Policy{Check1: check1, Check2: check2, Letter: string(letter)}, Password(password)
 }
 
 func validatePasswordSledRental(policy Policy, password Password) bool {
