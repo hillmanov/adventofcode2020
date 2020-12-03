@@ -11,6 +11,7 @@ func ReadLines(filename string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer f.Close()
 
 	s := []string{}
 
@@ -27,6 +28,7 @@ func ReadInts(filename string) ([]int, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer f.Close()
 
 	i := []int{}
 
@@ -41,4 +43,8 @@ func ReadInts(filename string) ([]int, error) {
 	}
 
 	return i, nil
+}
+
+func ReplaceAtIndex(str string, replacement string, index int) string {
+	return str[:index] + replacement + str[index+1:]
 }
