@@ -1,4 +1,4 @@
-module adventofcode/day3
+module adventofcode/day03
 
 go 1.15
 
