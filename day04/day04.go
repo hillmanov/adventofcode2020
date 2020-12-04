@@ -29,29 +29,17 @@ func (p passport) LooseValidate() bool {
 
 func (p passport) TightValidate() bool {
 	// (Birth Year) - four digits; at least 1920 and at most 2002.
-	birthYear, err := strconv.Atoi(p.BirthYear)
-	if err != nil {
-		return false
-	}
-	if birthYear < 1920 || birthYear > 2002 {
+	if !inRange(p.BirthYear, 1920, 2002) {
 		return false
 	}
 
 	// (Issue Year) - four digits; at least 2010 and at most 2020.
-	issueYear, err := strconv.Atoi(p.IssueYear)
-	if err != nil {
-		return false
-	}
-	if issueYear < 2010 || issueYear > 2020 {
+	if !inRange(p.IssueYear, 2010, 2020) {
 		return false
 	}
 
 	// (Expiration Year) - four digits; at least 2020 and at most 2030.
-	expirationYear, err := strconv.Atoi(p.ExpirationYear)
-	if err != nil {
-		return false
-	}
-	if expirationYear < 2020 || expirationYear > 2030 {
+	if !inRange(p.ExpirationYear, 2020, 2030) {
 		return false
 	}
 
@@ -63,18 +51,15 @@ func (p passport) TightValidate() bool {
 		return false
 	}
 	parts := heightParts.FindStringSubmatch(p.Height)
-	height, err := strconv.Atoi(parts[1])
-	if err != nil {
-		return false
-	}
+	height := parts[1]
 	unit := parts[2]
 	switch unit {
 	case "in":
-		if height < 59 || height > 76 {
+		if !inRange(height, 59, 76) {
 			return false
 		}
 	case "cm":
-		if height < 150 || height > 193 {
+		if !inRange(height, 150, 193) {
 			return false
 		}
 	}
@@ -135,6 +120,17 @@ func part2(passports []passport) int {
 		}
 	}
 	return validCount
+}
+
+func inRange(s string, min, max int) bool {
+	value, err := strconv.Atoi(s)
+	if err != nil {
+		return false
+	}
+	if value < min || value > max {
+		return false
+	}
+	return true
 }
 
 func parsePassports(input string) []passport {
