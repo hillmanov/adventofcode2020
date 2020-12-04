@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bufio"
+	"io/ioutil"
 	"os"
 	"strconv"
 )
@@ -43,6 +44,14 @@ func ReadInts(filename string) ([]int, error) {
 	}
 
 	return i, nil
+}
+
+func ReadContents(filename string) (string, error) {
+	contents, err := ioutil.ReadFile("./input.txt")
+	if err != nil {
+		return "", err
+	}
+	return string(contents), nil
 }
 
 func ReplaceAtIndex(str string, replacement string, index int) string {
