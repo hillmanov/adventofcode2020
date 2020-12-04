@@ -14,8 +14,8 @@ func main() {
 	part1Solution := part1(mapPattern)
 	part2Solution := part2(mapPattern)
 
-	fmt.Printf("Day 3: Part 1: = %+v\n", part1Solution)
-	fmt.Printf("Day 3: Part 2: = %+v\n", part2Solution)
+	fmt.Printf("Day 03: Part 1: = %+v\n", part1Solution)
+	fmt.Printf("Day 03: Part 2: = %+v\n", part2Solution)
 }
 
 func part1(mapPattern []string) int {

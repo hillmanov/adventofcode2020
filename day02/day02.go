@@ -27,8 +27,8 @@ func main() {
 	part1Solution := part1(entries)
 	part2Solution := part2(entries)
 
-	fmt.Printf("Day 2: Part 1: = %+v\n", part1Solution)
-	fmt.Printf("Day 2: Part 2: = %+v\n", part2Solution)
+	fmt.Printf("Day 02: Part 1: = %+v\n", part1Solution)
+	fmt.Printf("Day 02: Part 2: = %+v\n", part2Solution)
 }
 
 func parseParts(line string) (Policy, Password) {

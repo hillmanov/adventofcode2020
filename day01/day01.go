@@ -24,8 +24,8 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Printf("Day 1: Part 1: = %+v\n", part1)
-	fmt.Printf("Day 1: Part 2: = %+v\n", part2)
+	fmt.Printf("Day 01: Part 1: = %+v\n", part1)
+	fmt.Printf("Day 01: Part 2: = %+v\n", part2)
 }
 
 // Part 1
