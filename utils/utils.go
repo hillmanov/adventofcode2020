@@ -57,3 +57,17 @@ func ReadContents(filename string) (string, error) {
 func ReplaceAtIndex(str string, replacement string, index int) string {
 	return str[:index] + replacement + str[index+1:]
 }
+
+func MinInt(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func MaxInt(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
