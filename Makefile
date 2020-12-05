@@ -8,7 +8,6 @@ replace adventofcode/utils => ../utils
 require adventofcode/utils v0.0.0
 endef
 
-
 define GO_FILE_TEMPLATE
 package main
 
@@ -18,36 +17,28 @@ import (
 )
 
 func main() {
-
-	entries, err := utils.ReadInts("./input.txt")
+	entries, err := utils.ReadLines("./input.txt")
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Printf("entries = %+v\\n", entries)
 
-	part1Solution, err := part1()
-	if err != nil {
-		panic(err)
-	}
+	part1Solution := part1()
 
-	part2Solution, err := part2()
-	if err != nil {
-		panic(err)
-	}
+	part2Solution := part2()
 
   fmt.Printf("Day ${day}: Part 1: = %+v\\n", part1Solution)
 	fmt.Printf("Day ${day}: Part 2: = %+v\\n", part2Solution)
 }
 
-func part1() (int, error) {
-	return -1, nil
+func part1() int {
+	return -1
 }
 
-func part2() (int, error) {
-	return -1, nil
+func part2() int {
+	return -1
 }
-
 endef
 
 export GO_MOD_TEMPLATE
