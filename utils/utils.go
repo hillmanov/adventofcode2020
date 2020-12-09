@@ -71,3 +71,25 @@ func MaxInt(a, b int) int {
 	}
 	return b
 }
+
+func MinMax(numbers []int) (int, int) {
+	var max int = numbers[0]
+	var min int = numbers[0]
+	for _, value := range numbers {
+		if max < value {
+			max = value
+		}
+		if min > value {
+			min = value
+		}
+	}
+	return min, max
+}
+
+func SumOf(numbers []int) int {
+	sum := 0
+	for _, n := range numbers {
+		sum += n
+	}
+	return sum
+}
