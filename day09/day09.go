@@ -23,7 +23,7 @@ func part1(numbers []int, preambleLength int) int {
 		number := numbers[currentIndex]
 		previousNumbers := numbers[currentIndex-preambleLength : currentIndex]
 
-		if !isSumOfPreviousNumbers(number, previousNumbers) {
+		if !isSumOfAnyTwoUniquePreviousNumbers(number, previousNumbers) {
 			return number
 		}
 	}
@@ -42,13 +42,13 @@ func part2(target int, numbers []int) int {
 
 	candidateNumbers := numbers[:targetIndex]
 
-	nums := findNumbersThatAddTo(target, candidateNumbers)
+	nums := findContinuousNumbersThatAddTo(target, candidateNumbers)
 	min, max := utils.MinMax(nums)
 
 	return min + max
 }
 
-func isSumOfPreviousNumbers(number int, previousNumbers []int) bool {
+func isSumOfAnyTwoUniquePreviousNumbers(number int, previousNumbers []int) bool {
 	for i := 0; i < len(previousNumbers); i++ {
 		for j := i; j < len(previousNumbers); j++ {
 			if previousNumbers[i] != previousNumbers[j] && previousNumbers[i]+previousNumbers[j] == number {
@@ -59,7 +59,7 @@ func isSumOfPreviousNumbers(number int, previousNumbers []int) bool {
 	return false
 }
 
-func findNumbersThatAddTo(target int, numbers []int) []int {
+func findContinuousNumbersThatAddTo(target int, numbers []int) []int {
 	for startIndex := 0; startIndex < len(numbers); startIndex++ {
 		for endIndex := startIndex + 1; endIndex < len(numbers); endIndex++ {
 			candidateNumbers := numbers[startIndex:endIndex]
