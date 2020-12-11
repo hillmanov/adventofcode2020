@@ -72,6 +72,26 @@ func MaxInt(a, b int) int {
 	return b
 }
 
+func MinOf(numbers []int) int {
+	var min int = numbers[0]
+	for _, value := range numbers {
+		if min > value {
+			min = value
+		}
+	}
+	return min
+}
+
+func MaxOf(numbers []int) int {
+	var max int = numbers[0]
+	for _, value := range numbers {
+		if max < value {
+			max = value
+		}
+	}
+	return max
+}
+
 func MinMax(numbers []int) (int, int) {
 	var max int = numbers[0]
 	var min int = numbers[0]
@@ -92,4 +112,16 @@ func SumOf(numbers []int) int {
 		sum += n
 	}
 	return sum
+}
+
+func UniqueOf(numbers []int) []int {
+	keys := make(map[int]bool)
+	unique := []int{}
+	for _, entry := range numbers {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			unique = append(unique, entry)
+		}
+	}
+	return unique
 }
