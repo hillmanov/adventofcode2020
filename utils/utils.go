@@ -114,7 +114,19 @@ func SumOf(numbers []int) int {
 	return sum
 }
 
-func UniqueOf(numbers []int) []int {
+func UniqueOfString(strings []string) []string {
+	keys := make(map[string]bool)
+	unique := []string{}
+	for _, entry := range strings {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			unique = append(unique, entry)
+		}
+	}
+	return unique
+}
+
+func UniqueOfInt(numbers []int) []int {
 	keys := make(map[int]bool)
 	unique := []int{}
 	for _, entry := range numbers {
