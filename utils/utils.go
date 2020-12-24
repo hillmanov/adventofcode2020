@@ -145,3 +145,9 @@ func Abs(n int) int {
 	return n
 
 }
+
+func CopyOf(src []int) []int {
+	dst := make([]int, len(src))
+	copy(dst, src)
+	return dst
+}
