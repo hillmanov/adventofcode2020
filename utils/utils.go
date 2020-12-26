@@ -151,3 +151,12 @@ func CopyOf(src []int) []int {
 	copy(dst, src)
 	return dst
 }
+
+func IndexOf(haystack []int, needle int) int {
+	for index, value := range haystack {
+		if value == needle {
+			return index
+		}
+	}
+	return -1
+}
