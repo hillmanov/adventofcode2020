@@ -1,15 +1,49 @@
 package main
 
 import (
-	"adventofcode/utils"
 	"fmt"
-	"strconv"
-
-	"github.com/pkg/profile"
 )
 
+type Cup struct {
+	Label int
+	Next  *Cup
+	Prev  *Cup
+}
+
+func (c *Cup) SnipChain() []*Cup {
+	chain := []*Cup{c.Next, c.Next.Next, c.Next.Next.Next}
+
+	chain[len(chain)-1].Prev = c
+	c.Next = chain[len(chain)-1].Next
+
+	chain[0].Prev = nil
+	chain[len(chain)-1].Next = nil
+
+	return chain
+}
+
+func (c *Cup) InsertChain(chain []*Cup) {
+	chain[len(chain)-1].Next = c.Next
+	chain[len(chain)-1].Next.Prev = chain[len(chain)-1]
+	chain[0].Prev = c
+	c.Next = chain[0]
+}
+
+func chainContains(label int, chain []*Cup) bool {
+	return chain[0].Label == label || chain[1].Label == label || chain[2].Label == label
+}
+
+func resultLabel(cupOne *Cup) string {
+	label := ""
+	currentCup := cupOne.Next
+	for currentCup != nil && currentCup != cupOne {
+		label += fmt.Sprintf("%d", currentCup.Label)
+		currentCup = currentCup.Next
+	}
+	return label
+}
+
 func main() {
-	defer profile.Start().Stop()
 	part1Solution := part1([]int{2, 5, 3, 1, 4, 9, 8, 6, 7})
 	fmt.Printf("Day 23: Part 1: = %+v\n", part1Solution)
 
@@ -17,80 +51,73 @@ func main() {
 	fmt.Printf("Day 23: Part 2: = %+v\n", part2Solution)
 }
 
-func part1(cups []int) string {
-	currentCup := cups[0]
-	for i := 0; i < 100; i++ {
-		indexOfCurrentCup := utils.IndexOf(cups, currentCup)
-		inPlayCups, pickedUpCups := split(cups, indexOfCurrentCup)
-		destinationCup := getDestinationCup(inPlayCups, pickedUpCups, currentCup)
-		cups = insertAt(inPlayCups, pickedUpCups, utils.IndexOf(inPlayCups, destinationCup))
-		currentCup = cups[(utils.IndexOf(cups, currentCup)+1)%len(cups)]
-	}
-
-	labels := ""
-	indexOfOne := utils.IndexOf(cups, 1)
-	for i := 0; i < len(cups)-1; i++ {
-		labels += strconv.Itoa(cups[(indexOfOne+1+i)%len(cups)])
-	}
-	return labels
+func part1(labels []int) string {
+	cupOne := play(labels, 0, 100)
+	return resultLabel(cupOne)
 }
 
-func part2(startCups []int) int {
-	cups := make([]int, 1000)
-	copy(cups, startCups)
-
-	for i := utils.MaxOf(cups) + 1; i < 100; i++ {
-		cups[i] = i
-	}
-	fmt.Println("Done with that...")
-
-	currentCup := cups[0]
-	for i := 0; i < 100; i++ {
-		fmt.Printf("i = %+v\n", i)
-		indexOfCurrentCup := utils.IndexOf(cups, currentCup)
-		inPlayCups, pickedUpCups := split(cups, indexOfCurrentCup)
-		destinationCup := getDestinationCup(inPlayCups, pickedUpCups, currentCup)
-		cups = insertAt(inPlayCups, pickedUpCups, utils.IndexOf(inPlayCups, destinationCup))
-		currentCup = cups[(utils.IndexOf(cups, currentCup)+1)%len(cups)]
-	}
-
-	return utils.IndexOf(cups, 1)
-
+func part2(labels []int) int {
+	cupOne := play(labels, 1_000_000, 10_000_000)
+	return cupOne.Next.Label * cupOne.Next.Next.Label
 }
 
-func getDestinationCup(cups []int, pickedUpCups []int, currentCup int) int {
-	destinationCup := currentCup - 1
+func play(labels []int, extra int, rounds int) *Cup {
 
-	for {
-		indexOfDestinationCup := utils.IndexOf(cups, destinationCup)
-		if indexOfDestinationCup != -1 {
-			return cups[indexOfDestinationCup]
-		} else {
-			destinationCup--
-			if destinationCup <= 0 {
-				destinationCup = len(cups) + len(pickedUpCups)
+	var cupRefs []*Cup
+	if extra == 0 {
+		cupRefs = make([]*Cup, len(labels)+1)
+	} else {
+		cupRefs = make([]*Cup, extra+1)
+	}
+
+	root := &Cup{Label: labels[0]}
+	cupRefs[labels[0]] = root
+
+	totalCups := 1
+	currentCup := root
+	for _, v := range labels[1:] {
+		newCup := &Cup{Label: v}
+		cupRefs[v] = newCup
+
+		currentCup.Next = newCup
+		newCup.Prev = currentCup
+		newCup.Next = root
+		currentCup = newCup
+		totalCups++
+	}
+
+	for v := len(labels) + 1; v <= extra; v++ {
+		newCup := &Cup{Label: v}
+		cupRefs[v] = newCup
+
+		currentCup.Next = newCup
+		newCup.Prev = currentCup
+		newCup.Next = root
+		currentCup = newCup
+		totalCups++
+	}
+
+	currentCup = root
+	for i := 0; i < rounds; i++ {
+		chain := currentCup.SnipChain()
+
+		destinationCupLabel := currentCup.Label
+		for {
+			destinationCupLabel--
+			if destinationCupLabel <= 0 {
+				destinationCupLabel = totalCups
+			}
+
+			if chainContains(destinationCupLabel, chain) == false {
+				break
 			}
 		}
-	}
-}
 
-func split(cups []int, afterIndex int) (inPlayCups []int, pickedUpCups []int) {
-	for i := 0; i < 3; i++ {
-		pickedUpCups = append(pickedUpCups, cups[(afterIndex+1+i)%len(cups)])
-	}
-	for _, cup := range cups {
-		if utils.IndexOf(pickedUpCups, cup) == -1 {
-			inPlayCups = append(inPlayCups, cup)
-		}
+		destinationCup := cupRefs[destinationCupLabel]
+		destinationCup.InsertChain(chain)
+
+		currentCup = currentCup.Next
 	}
 
-	return inPlayCups, pickedUpCups
-}
-
-func insertAt(cups []int, insert []int, at int) []int {
-	newCups := make([]int, 0)
-	newCups = append(newCups, cups[:at+1]...)
-	newCups = append(newCups, insert...)
-	newCups = append(newCups, cups[at+1:]...)
-	return newCups
+	return cupRefs[1]
 }
