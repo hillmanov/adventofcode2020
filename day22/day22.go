@@ -13,9 +13,9 @@ func main() {
 	deck1, deck2 := parseDecks(entries)
 
 	part1Solution := part1(deck1, deck2)
-	part2Solution := part2(deck1, deck2)
-
 	fmt.Printf("Day 22: Part 1: = %+v\n", part1Solution)
+
+	part2Solution := part2(deck1, deck2)
 	fmt.Printf("Day 22: Part 2: = %+v\n", part2Solution)
 }
 
@@ -48,16 +48,21 @@ func part2(deck1, deck2 []int) int {
 }
 
 func playGame(deck1, deck2 []int, recursiveCombat bool) (int, []int, []int) {
-	pastRounds := map[string]bool{}
+	// pastRounds := map[string]bool{}
+	numRounds := 0
 	for len(deck1) != 0 && len(deck2) != 0 {
-		if _, ok := pastRounds[key(deck1, deck2)]; ok && recursiveCombat {
+		if numRounds > 2000 {
 			return 1, deck1, deck2
 		}
+		// if _, ok := pastRounds[key(deck1, deck2)]; ok && recursiveCombat {
+		// 	return 1, deck1, deck2
+		// }
 
-		pastRounds[key(deck1, deck2)] = true
+		numRounds++
+		// pastRounds[key(deck1, deck2)] = true
 		switch {
 		case recursiveCombat && len(deck1) > deck1[0] && len(deck2) > deck2[0]:
-			switch winner, _, _ := playGame(utils.CopyOf(deck1[1:deck1[0]+1]), utils.CopyOf(deck2[1:deck2[0]+1]), true); winner {
+			switch winner, _, _ := playGame(utils.CopyOf(deck1[1:deck1[0]+1]), utils.CopyOf(deck2[1:deck2[0]+1]), recursiveCombat); winner {
 			case 1:
 				deck1 = append(deck1[1:], deck1[0])
 				deck1 = append(deck1, deck2[0])
