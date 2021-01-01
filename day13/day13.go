@@ -17,9 +17,9 @@ func main() {
 	earliestDepartureTime, busses := parseInput(lines)
 
 	part1Solution := part1(earliestDepartureTime, busses)
-	part2Solution := part2()
-
 	fmt.Printf("Day 13: Part 1: = %+v\n", part1Solution)
+
+	part2Solution := part2(busses)
 	fmt.Printf("Day 13: Part 2: = %+v\n", part2Solution)
 }
 
@@ -39,8 +39,37 @@ func part1(earliestDepartureTime int, busses []int) int {
 	return bestDepartureTimeDiff * bestBus
 }
 
-func part2() int {
-	return -1
+func part2(busses []int) int {
+	return chineseRemainder(busses)
+}
+
+func modularMultiplicativeInverse(number, modulus int) int {
+	target := number % modulus
+	for x := 1; x < modulus; x++ {
+		if (target*x)%modulus == 1 {
+			return x
+		}
+	}
+	return 1
+}
+
+func chineseRemainder(busses []int) int {
+	sum, product := 0, 1
+
+	for _, bus := range busses {
+		if bus != 0 {
+			product *= bus
+		}
+	}
+
+	for busIndex, bus := range busses {
+		if bus != 0 {
+			p := product / bus
+			sum += (bus - busIndex) * modularMultiplicativeInverse(p, bus) * p
+		}
+	}
+
+	return sum % product
 }
 
 func parseInput(lines []string) (int, []int) {
@@ -51,6 +80,8 @@ func parseInput(lines []string) (int, []int) {
 	for _, busEntry := range busEntries {
 		if bus, err := strconv.Atoi(busEntry); err == nil {
 			busses = append(busses, bus)
+		} else {
+			busses = append(busses, 0)
 		}
 	}
 
