@@ -57,7 +57,7 @@ func main() {
 func part1(tileDirections [][]string, tiles map[Tile]color) int {
 
 	for _, directions := range tileDirections {
-		location := Tile{X: 0, Y: 0}
+		location := Tile{X: 0, Y: 0, Z: 0}
 		for _, direction := range directions {
 			switch direction {
 			case "e":
